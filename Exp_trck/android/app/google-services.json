@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1010864606484",
+    "project_id": "exptrck-69969",
+    "storage_bucket": "exptrck-69969.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010864606484:android:381f759011288495b40601",
+        "android_client_info": {
+          "package_name": "com.example.exp_trck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYfIUH1VAAX2JEa83IhwPR-ENnl9HZiwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
