@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:exp_trck/firebase_options.dart';
-import 'package:exp_trck/screens/Splash_Screen.dart';
+import 'package:exp_trck/screens/login_screen.dart';
+import 'package:exp_trck/screens/register_screen.dart';
+import 'package:exp_trck/screens/splash_screen.dart';
 import 'package:exp_trck/models/expanse.dart';
 import 'package:exp_trck/services/firestore_services.dart';
 import 'package:exp_trck/screens/add_expense.dart';
@@ -25,11 +27,64 @@ class ExpTrck extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Expense Tracker',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.grey[100],
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE91E63),
+          brightness: Brightness.light,
+        ),
+        scaffoldBackgroundColor: const Color(0xFFFFF7FA),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFE91E63),
+          foregroundColor: Colors.white,
+          centerTitle: true,
+          elevation: 0,
+        ),
+        cardTheme: CardThemeData(
+          color: Colors.white,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFE91E63),
+            foregroundColor: Colors.white,
+            minimumSize: const Size.fromHeight(54),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: const Color(0xFFFDEEF4),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: const BorderSide(color: Color(0xFFF8C8D9)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: const BorderSide(color: Color(0xFFE91E63), width: 1.6),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 16,
+          ),
+        ),
       ),
       home: const SplashScreen(),
       routes: {
+        '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
         '/home': (context) => const ExpenseTrackerHome(),
       },
     );
@@ -47,6 +102,9 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
   DateTime _month = DateTime.now();
   bool _monthview = false;
   final _service = FirestoreServices();
+
+  static const Color _pink = Color(0xFFE91E63);
+  static const Color _pinkDark = Color(0xFFC2185B);
 
   void _chgmonth(int value) {
     setState(() {
@@ -80,19 +138,26 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
   void _delete(String id) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Expense'),
         content: const Text('Are you sure you want to delete this expense?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () async {
+              final navigator = Navigator.of(context, rootNavigator: true);
+              final messenger = ScaffoldMessenger.of(context);
+
               await _service.deleteExpense(id);
-              Navigator.pop(context);
-              _snack('Expense Deleted');
+              if (!mounted) return;
+
+              navigator.pop();
+              messenger.showSnackBar(
+                const SnackBar(content: Text('Expense Deleted')),
+              );
             },
             child: const Text(
               'Delete',
@@ -110,7 +175,7 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
       appBar: AppBar(
         title: const Text('Expense Tracker Home'),
         centerTitle: true,
-        backgroundColor: Colors.green,
+        backgroundColor: _pink,
         actions: [
           IconButton(
             onPressed: () {
@@ -123,7 +188,7 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green,
+        backgroundColor: _pink,
         child: const Icon(Icons.add),
         onPressed: () => _sheet(null),
       ),
@@ -135,7 +200,9 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                  color: Colors.green[100],
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFAD5E4), Color(0xFFFFEEF4)],
+                  ),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -185,7 +252,7 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
                 final amount = snapshot.data ?? 0.0;
                 return Card(
                   elevation: 10,
-                  color: Colors.green[200],
+                  color: const Color(0xFFFFD7E4),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -195,6 +262,7 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
+                            color: _pinkDark,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -203,6 +271,7 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
                           style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
+                            color: _pinkDark,
                           ),
                         ),
                       ],
@@ -250,4 +319,3 @@ class ExpenseTrackerHomeState extends State<ExpenseTrackerHome> {
     );
   }
 }
-

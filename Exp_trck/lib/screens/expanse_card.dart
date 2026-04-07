@@ -17,10 +17,8 @@ class ExpanseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color categoryColor =
-        CategoryConfig.getColor(expense.categoty);
-    final IconData categoryIcon =
-        CategoryConfig.getIcon(expense.categoty);
+    final Color categoryColor = CategoryConfig.getColor(expense.categoty);
+    final IconData categoryIcon = CategoryConfig.getIcon(expense.categoty);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -44,7 +42,7 @@ class ExpanseCard extends StatelessWidget {
               height: 48,
               width: 48,
               decoration: BoxDecoration(
-                color: categoryColor.withOpacity(0.15),
+                color: categoryColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -70,9 +68,7 @@ class ExpanseCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 4),
-
                   Text(
                     expense.categoty,
                     style: TextStyle(
@@ -81,9 +77,7 @@ class ExpanseCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-
                   const SizedBox(height: 4),
-
                   Text(
                     DateFormat('dd MMM yyyy').format(expense.date),
                     style: TextStyle(
@@ -106,9 +100,7 @@ class ExpanseCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
                 const SizedBox(height: 6),
-
                 Row(
                   children: [
                     IconButton(
